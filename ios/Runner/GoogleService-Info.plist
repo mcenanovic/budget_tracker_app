@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>513919183011-md4i8ccei8cjcub1i3052kqmh0m622lt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.513919183011-md4i8ccei8cjcub1i3052kqmh0m622lt</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCg_Td-u-hb9A0sNI612IzV6CTVepBIcyE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>513919183011</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.budgetTrackerApp</string>
+	<key>PROJECT_ID</key>
+	<string>budget-tracker-42df9</string>
+	<key>STORAGE_BUCKET</key>
+	<string>budget-tracker-42df9.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:513919183011:ios:cc457de3fe3126722cb716</string>
+	<key>DATABASE_URL</key>
+	<string>https://budget-tracker-42df9-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>
