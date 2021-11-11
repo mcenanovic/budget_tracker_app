@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 import '../styles.dart';
+import 'add_item_dialog.dart';
 
 class ItemGroup extends StatelessWidget {
   final String name;
@@ -60,21 +61,34 @@ class ItemGroup extends StatelessWidget {
           shrinkWrap: true,
           itemCount: items.length,
           itemBuilder: (context, index) => Slidable(
+            key: Key(items[index].id!),
+            dismissal: SlidableDismissal(
+              child: const SlidableDrawerDismissal(),
+              onDismissed: (_) => Provider.of<Items>(context, listen: false)
+                  .deleteItem(items[index]),
+            ),
             actionPane: const SlidableDrawerActionPane(),
             secondaryActions: [
               IconSlideAction(
                 caption: 'Update',
                 color: Styles.kSecondaryColor,
                 icon: Icons.update,
-                onTap: () =>
-                    Provider.of<Items>(context).updateItem(items[index]),
+                onTap: () => showDialog<String>(
+                  context: context,
+                  builder: (context) => AddItemDialog(
+                    item: items[index],
+                    index: index,
+                  ),
+                ),
               ),
               IconSlideAction(
                 caption: 'Delete',
                 color: Colors.red,
                 icon: Icons.delete,
-                onTap: () =>
-                    Provider.of<Items>(context).deleteItem(items[index]),
+                onTap: () {
+                  Provider.of<Items>(context, listen: false)
+                      .deleteItem(items[index], index: index);
+                },
               ),
             ],
             child: ListTile(

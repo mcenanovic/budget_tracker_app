@@ -102,17 +102,31 @@ class Items with ChangeNotifier {
   }
 
   void addNewItem(Item newItem) {
-    // newItem.id = (_items.length + 1).toString();
+    final reference = _database.child('/items').push();
+    final uniqueKey = reference.key;
 
-    _database.child('/items').push().set(newItem.toJson()).then((_) {
+    reference.set(newItem.toJson()).then((_) {
+      newItem.id = uniqueKey;
       _items.add(newItem);
       notifyListeners();
     }).catchError((error) => print(error));
   }
 
-  void deleteItem(Item item) {}
+  void deleteItem(Item item, {int? index}) {
+    _database.child('/items/${item.id}').remove().then((_) {
+      if (index != null) {
+        _items.removeAt(index);
+        notifyListeners();
+      }
+    }).catchError((error) => print(error));
+  }
 
-  void updateItem(Item item) {}
+  void updateItem(Item item, int index) {
+    _database.child('/items/${item.id}').update(item.toJson()).then((_) {
+      _items[index] = item;
+      notifyListeners();
+    }).catchError((error) => print(error));
+  }
 
   List<Item> searchItems(String searchTerms) {
     return _items

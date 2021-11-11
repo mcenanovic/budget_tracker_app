@@ -5,14 +5,14 @@ enum Category {
 }
 
 class Item {
-  String id;
+  String? id;
   final String name;
   final Category category;
   final double price;
   final DateTime dateTime;
 
   Item({
-    required this.id,
+    this.id,
     required this.name,
     required this.category,
     required this.price,

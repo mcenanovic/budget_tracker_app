@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 import '../styles.dart';
 
 class AddItemDialog extends StatefulWidget {
-  AddItemDialog({Key? key}) : super(key: key);
+  Item? item;
+  int? index;
+
+  AddItemDialog({Key? key, this.item, this.index}) : super(key: key);
 
   @override
   _AddItemDialogState createState() => _AddItemDialogState();
@@ -24,6 +27,25 @@ class _AddItemDialogState extends State<AddItemDialog> {
   DateTime? _dateTime;
   late item.Category _category;
   var _isLoading = false;
+  var _isUpdate = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.item != null) {
+      final item = widget.item;
+
+      setState(() {
+        _title = item!.name;
+        _price = item.price;
+        _dateTime = item.dateTime;
+        _category = item.category;
+      });
+
+      _isUpdate = true;
+    }
+  }
 
   void _selectDate(BuildContext context) {
     final themeData = Theme.of(context).brightness == Brightness.light
@@ -69,13 +91,16 @@ class _AddItemDialogState extends State<AddItemDialog> {
     _formKey.currentState!.save();
 
     final Item newItem = Item(
-        id: DateTime.now().toIso8601String(),
+        id: _isUpdate ? widget.item?.id : null,
         name: _title,
         category: _category,
         price: _price,
         dateTime: _dateTime!);
 
-    Provider.of<Items>(context, listen: false).addNewItem(newItem);
+    _isUpdate
+        ? Provider.of<Items>(context, listen: false)
+            .updateItem(newItem, widget.index!)
+        : Provider.of<Items>(context, listen: false).addNewItem(newItem);
 
     setState(() {
       _isLoading = false;
@@ -110,6 +135,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              initialValue: _title,
               style: TextStyle(
                   color: Theme.of(context).textTheme.headline1!.color),
               decoration: const InputDecoration(
@@ -125,6 +151,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
               onSaved: (newValue) => _title = newValue!,
             ),
             DropdownButtonFormField(
+              value: _isUpdate ? _category : null,
               style: TextStyle(
                   color: Theme.of(context).textTheme.headline1!.color),
               items: const [
@@ -154,6 +181,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
               },
             ),
             TextFormField(
+              initialValue: _price > 0.0 ? _price.toString() : null,
               style: TextStyle(
                   color: Theme.of(context).textTheme.headline1!.color),
               keyboardType: TextInputType.number,
