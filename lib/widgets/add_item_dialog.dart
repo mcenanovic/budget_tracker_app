@@ -109,9 +109,9 @@ class _AddItemDialogState extends State<AddItemDialog> {
     Navigator.of(context).pop();
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text(
-          'Item added successfully',
+          'Item ${_isUpdate ? 'updated' : 'added'} successfully',
           textAlign: TextAlign.center,
         ),
       ),
@@ -126,7 +126,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
         borderRadius: BorderRadius.all(Radius.circular(32.0)),
       ),
       title: Text(
-        'Add new item',
+        _isUpdate ? 'Update existing item' : 'Add new item',
         style: TextStyle(color: Theme.of(context).textTheme.headline2!.color),
       ),
       content: Form(
@@ -231,7 +231,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
         TextButton(
           onPressed: _submitData,
           child: Text(
-            'Create',
+            _isUpdate ? 'Update' : 'Create',
             style: TextStyle(
               color: Theme.of(context).textTheme.headline4!.color,
               fontSize: 16.0,

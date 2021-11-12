@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<Items>(
       create: (_) => Items(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: false,
         title: 'Budget Tracker App',
         theme: themeData,
         darkTheme: themeData.copyWith(
