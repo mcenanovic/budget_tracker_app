@@ -1,16 +1,21 @@
+import 'package:budget_tracker_app/providers/authentication_state.dart';
 import 'package:budget_tracker_app/widgets/add_item_dialog.dart';
 import 'package:budget_tracker_app/widgets/budget_overview_card.dart';
 import 'package:budget_tracker_app/widgets/items_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'styles.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       // floatingActionButton: FloatingActionButton(
       //   child: const Icon(
       //     Icons.add,
@@ -20,6 +25,19 @@ class HomeScreen extends StatelessWidget {
       // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       backgroundColor: Theme.of(context).backgroundColor,
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              onTap: () =>
+                  Provider.of<AuthenticationState>(context, listen: false)
+                      .signOut(),
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+            )
+          ],
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         minimum: const EdgeInsets.only(

@@ -1,10 +1,14 @@
 import 'package:budget_tracker_app/home_screen.dart';
+import 'package:budget_tracker_app/providers/authentication_state.dart';
 import 'package:budget_tracker_app/providers/items.dart';
+import 'package:budget_tracker_app/widgets/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'login_screen.dart';
 import 'styles.dart';
 
 Future<void> main() async {
@@ -41,8 +45,11 @@ class MyApp extends StatelessWidget {
       fontFamily: 'Poppins',
     );
 
-    return ChangeNotifierProvider<Items>(
-      create: (_) => Items(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthenticationState()),
+        ChangeNotifierProvider(create: (_) => Items()),
+      ],
       child: MaterialApp(
         // debugShowCheckedModeBanner: false,
         title: 'Budget Tracker App',
@@ -68,7 +75,24 @@ class MyApp extends StatelessWidget {
             primary: Styles.kSecondaryColor,
           ),
         ),
-        home: const HomeScreen(),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return HomeScreen();
+            }
+            return LoginScreen();
+          },
+        ),
+        // home: Consumer<AuthenticationState>(
+        //   builder: (context, appState, child) => Authentication(
+        //     loginState: appState.loginState,
+        //     signInWithEmailAndPassword: appState.signInWithEmailAndPassword,
+        //     registerAccount: appState.registerAccount,
+        //     signInWithFacebook: appState.signInWithFacebook,
+        //     signOut: appState.signOut,
+        //   ),
+        // ),
       ),
     );
   }
