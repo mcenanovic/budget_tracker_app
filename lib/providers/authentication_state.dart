@@ -19,14 +19,14 @@ class AuthenticationState extends ChangeNotifier {
   Future<void> _init() async {
     await Firebase.initializeApp();
 
-    FirebaseAuth.instance.userChanges().listen((user) {
-      if (user != null) {
-        print(user);
-      } else {
-        print('NO USER');
-      }
-      notifyListeners();
-    });
+    // FirebaseAuth.instance.userChanges().listen((user) {
+    //   if (user != null) {
+    //     // print(user);
+    //   } else {
+    //     print('NO USER');
+    //   }
+    //   notifyListeners();
+    // });
   }
 
   Future<void> signInWithEmailAndPassword(

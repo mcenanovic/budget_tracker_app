@@ -1,3 +1,6 @@
+// ignore_for_file: avoid_print, invalid_return_type_for_catch_error
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 
@@ -12,10 +15,30 @@ enum TimePeriod {
 
 class Items with ChangeNotifier {
   final _database = FirebaseDatabase.instance.reference();
+  String _userId = '';
 
   Items() {
-    _database.child('/items').once().then((snapshot) {
+    FirebaseAuth.instance.userChanges().listen((user) async {
+      if (user == null) {
+        return;
+      }
+
+      _userId = user.uid;
+      await fetchItems();
+      notifyListeners();
+    });
+  }
+
+  Future<void> fetchItems() async {
+    _items.clear();
+
+    _database.child('items/$_userId').once().then((snapshot) {
+      if (!snapshot.exists) {
+        return;
+      }
+
       final data = Map<String, dynamic>.from(snapshot.value);
+
       data.forEach((key, value) {
         _items.add(Item(
             id: key,
@@ -102,7 +125,7 @@ class Items with ChangeNotifier {
   }
 
   void addNewItem(Item newItem) {
-    final reference = _database.child('/items').push();
+    final reference = _database.child('items/$_userId').push();
     final uniqueKey = reference.key;
 
     reference.set(newItem.toJson()).then((_) {
@@ -113,7 +136,7 @@ class Items with ChangeNotifier {
   }
 
   void deleteItem(Item item, {int? index}) {
-    _database.child('/items/${item.id}').remove().then((_) {
+    _database.child('items/$_userId/${item.id}').remove().then((_) {
       if (index != null) {
         _items.removeAt(index);
         notifyListeners();
@@ -122,7 +145,10 @@ class Items with ChangeNotifier {
   }
 
   void updateItem(Item item, int index) {
-    _database.child('/items/${item.id}').update(item.toJson()).then((_) {
+    _database
+        .child('items/$_userId/${item.id}')
+        .update(item.toJson())
+        .then((_) {
       _items[index] = item;
       notifyListeners();
     }).catchError((error) => print(error));

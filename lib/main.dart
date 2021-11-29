@@ -1,7 +1,6 @@
 import 'package:budget_tracker_app/home_screen.dart';
 import 'package:budget_tracker_app/providers/authentication_state.dart';
 import 'package:budget_tracker_app/providers/items.dart';
-import 'package:budget_tracker_app/widgets/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.orange));
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
     final themeData = ThemeData(
@@ -74,6 +75,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: Styles.kSecondaryColor,
           ),
+          snackBarTheme: const SnackBarThemeData(
+            contentTextStyle: TextStyle(color: Styles.kSecondaryColor),
+          ),
         ),
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
@@ -81,18 +85,9 @@ class MyApp extends StatelessWidget {
             if (snapshot.hasData) {
               return HomeScreen();
             }
-            return LoginScreen();
+            return const LoginScreen();
           },
         ),
-        // home: Consumer<AuthenticationState>(
-        //   builder: (context, appState, child) => Authentication(
-        //     loginState: appState.loginState,
-        //     signInWithEmailAndPassword: appState.signInWithEmailAndPassword,
-        //     registerAccount: appState.registerAccount,
-        //     signInWithFacebook: appState.signInWithFacebook,
-        //     signOut: appState.signOut,
-        //   ),
-        // ),
       ),
     );
   }
